@@ -1,6 +1,6 @@
-FROM node:current-alpine
+FROM alpine:latest
 
-RUN apk add --no-cache --update git bash \
+RUN apk add --no-cache --update git bash npm \
     && adduser -D -h /home/container container
 
 USER container
