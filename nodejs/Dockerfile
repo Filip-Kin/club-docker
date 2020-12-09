@@ -8,6 +8,6 @@ ENV  USER=container HOME=/home/container
 
 WORKDIR /home/container
 
-COPY ./entrypoint.sh /.club-server-entrypoint.sh
+COPY ./entrypoint.sh /entrypoint.sh
 
-CMD ["/bin/bash", "/.club-server-entrypoint.sh"]
+CMD ["/bin/bash", "/entrypoint.sh"]
