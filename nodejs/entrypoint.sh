@@ -17,6 +17,11 @@ cd app
 
 GIT_CHANGED=0
 
+export NODE_ENV=production
+
+export HTTP_PORT=$SERVER_PORT
+export PORT=$SERVER_PORT
+
 if [ -n "$GIT_REPO" ]; then
   echo "Git Repository: $GIT_REPO"
   if [ -e ".git" ]; then
@@ -31,8 +36,7 @@ if [ -n "$GIT_REPO" ]; then
   fi
 fi
 
-export NODE_ENV=production
-
+echo $ npm install -D
 npm install -D
 
 if [ -n "$GIT_REPO" ] && [ -n "$BUILD_SCRIPT" ]; then
@@ -46,6 +50,7 @@ if [ -n "$GIT_REPO" ] && [ -n "$BUILD_SCRIPT" ]; then
   echo "$GIT_REPO;$GIT_BRANCH;$BUILD_SCRIPT" > /home/container/.build.config
   if [ "$GIT_CHANGED" = "1" ]; then
     BUILD_SCRIPT_MODIFIED=`eval echo $(echo ${BUILD_SCRIPT} | sed -e 's/{{/${/g' -e 's/}}/}/g')`
+    echo $ "${BUILD_SCRIPT_MODIFIED}"
     ${BUILD_SCRIPT_MODIFIED}
   fi
 fi
@@ -53,14 +58,13 @@ fi
 START_SCRIPT_MODIFIED=`eval echo $(echo ${START_SCRIPT} | sed -e 's/{{/${/g' -e 's/}}/}/g')`
 
 if [ -n "${DOMAIN}" ]; then
+  echo Notifying Club Sever of the domain configuration.
   wget "http://${SERVER_IP}:1000/node?domain=${DOMAIN}&hostname=${HOSTNAME}" -O -
 fi
 
 echo "Starting Node.JS"
 
-export HTTP_PORT=$SERVER_PORT
-export PORT=$SERVER_PORT
-
+echo $ "${START_SCRIPT_MODIFIED}"
 ${START_SCRIPT_MODIFIED} &
 PID=$!
 
