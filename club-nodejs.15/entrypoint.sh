@@ -15,8 +15,6 @@ cd app
 
 GIT_CHANGED=0
 
-export NODE_ENV=production
-
 # environment variables for everything, copied muiltiple times
 # just in case
 export PORT=${SERVER_PORT}
@@ -68,5 +66,7 @@ if [ -n "${DOMAIN}" ]; then
 fi
 
 echo "Starting Node.JS"
+
+export NODE_ENV=production
 
 ${START_SCRIPT_MODIFIED}
