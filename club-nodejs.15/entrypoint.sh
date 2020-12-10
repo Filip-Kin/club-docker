@@ -7,8 +7,6 @@ echo "NPM Version: $(npm --version)"
 
 echo ""
 
-PID=
-
 if [ ! -e "app" ]; then
   mkdir app
 fi
@@ -19,15 +17,22 @@ GIT_CHANGED=0
 
 export NODE_ENV=production
 
-export HTTP_PORT=$SERVER_PORT
-export PORT=$SERVER_PORT
+# environment variables for everything, copied muiltiple times
+# just in case
+export PORT=${SERVER_PORT}
+export HTTP_PORT=${SERVER_PORT}
 
-if [ -n "$GIT_REPO" ]; then
-  echo "Git Repository: $GIT_REPO"
+export CLUB_HOST=172.18.0.1
+export RETHINKDB_HOST=${CLUB_HOST}
+export MYSQL_HOST=${CLUB_HOST}
+export REDIS_HOST=${CLUB_HOST}
+
+if [ -n "${GIT_REPO}" ]; then
+  echo "Git Repository: ${GIT_REPO}"
   if [ -e ".git" ]; then
     git remote set-url "$(git remote)" "${GIT_REPO}"
-    git checkout .
-    git checkout "${GIT_BRANCH}"
+    git reset --hard
+    git checkout -f "${GIT_BRANCH}"
     git pull origin "${GIT_BRANCH}" --recurse-submodules -q | grep -q -v 'Already up-to-date.' && GIT_CHANGED=1
   else
     git init .
@@ -39,15 +44,15 @@ fi
 echo $ npm install -D
 npm install -D
 
-if [ -n "$GIT_REPO" ] && [ -n "$BUILD_SCRIPT" ]; then
+if [ -n "${GIT_REPO}" ] && [ -n "${BUILD_SCRIPT}" ]; then
   if [ ! -e "/home/container/.build.config" ]; then
     GIT_CHANGED=1
   else
-    if ! [ "$GIT_REPO;$GIT_BRANCH;$BUILD_SCRIPT" = "$(cat /home/container/.build.config)" ]; then
+    if ! [ "${GIT_REPO};${GIT_BRANCH};${BUILD_SCRIPT}" = "$(cat /home/container/.build.config)" ]; then
       GIT_CHANGED=1
     fi
   fi
-  echo "$GIT_REPO;$GIT_BRANCH;$BUILD_SCRIPT" > /home/container/.build.config
+  echo "${GIT_REPO};${GIT_BRANCH};${BUILD_SCRIPT}" > /home/container/.build.config
   if [ "$GIT_CHANGED" = "1" ]; then
     BUILD_SCRIPT_MODIFIED=`eval echo $(echo ${BUILD_SCRIPT} | sed -e 's/{{/${/g' -e 's/}}/}/g')`
     echo $ "${BUILD_SCRIPT_MODIFIED}"
@@ -59,15 +64,9 @@ START_SCRIPT_MODIFIED=`eval echo $(echo ${START_SCRIPT} | sed -e 's/{{/${/g' -e 
 
 if [ -n "${DOMAIN}" ]; then
   echo Notifying Club Sever of the domain configuration.
-  wget "http://${SERVER_IP}:1000/node?domain=${DOMAIN}&hostname=${HOSTNAME}" -O -
+  wget "http://${CLUB_HOST}:1000/node?domain=${DOMAIN}&hostname=${HOSTNAME}" -O -
 fi
 
 echo "Starting Node.JS"
 
-echo $ "${START_SCRIPT_MODIFIED}"
-${START_SCRIPT_MODIFIED} &
-PID=$!
-
-trap 'kill $PID; exit' INT
-
-wait
+${START_SCRIPT_MODIFIED}

@@ -1,6 +1,6 @@
-FROM alpine:latest
+FROM mhart/alpine-node:15
 
-RUN apk add --no-cache --update git bash npm \
+RUN apk add --no-cache --update git bash python3 gcc g++ make \
     && adduser -D -h /home/container container
 
 USER container
