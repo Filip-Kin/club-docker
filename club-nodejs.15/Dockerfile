@@ -1,7 +1,7 @@
 FROM mhart/alpine-node:15
 
-RUN apk add --no-cache --update git bash python3 gcc g++ make \
-    && adduser -D -h /home/container container
+RUN apk add --no-cache --update git bash python2 gcc g++ make openssh-client \
+    && adduser -u 997 -D -h /home/container container
 
 USER container
 ENV  USER=container HOME=/home/container
@@ -10,4 +10,4 @@ WORKDIR /home/container
 
 COPY ./entrypoint.sh /entrypoint.sh
 
-CMD ["/bin/bash", "/entrypoint.sh"]
+CMD ["/bin/sh", "/entrypoint.sh"]

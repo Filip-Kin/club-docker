@@ -1,9 +1,8 @@
 #!/bin/bash
 cd /home/container
 
-# Output Current Node Version
-echo "Node.JS Version: $(node --version)"
-echo "NPM Version: $(npm --version)"
+# Output Current Go Version
+go version
 
 echo ""
 
@@ -24,6 +23,7 @@ export CLUB_HOST=172.18.0.1
 export RETHINKDB_HOST=${CLUB_HOST}
 export MYSQL_HOST=${CLUB_HOST}
 export REDIS_HOST=${CLUB_HOST}
+export GOPATH=/home/container/go
 
 if [ -n "${GIT_REPO}" ]; then
   echo "Git Repository: ${GIT_REPO}"
@@ -39,8 +39,8 @@ if [ -n "${GIT_REPO}" ]; then
   fi
 fi
 
-echo $ npm install -D
-npm install -D
+echo $ go mod download
+go mod download
 
 if [ -n "${GIT_REPO}" ] && [ -n "${BUILD_SCRIPT}" ]; then
   if [ ! -e "/home/container/.build.config" ]; then

@@ -1,16 +1,22 @@
 docker_user=filip96
 
 docker_deploy() {
-  name=$1
-  version=$2
+  tag=$1
+  folder=$1
+  if [ -n "$2" ]; then
+    tag="$1:$2"
+    folder="$1.$2"
+  fi
 
-  printf 'Building %s\n' "$name:$version"
+  printf 'Building %s\n' "$tag"
 
-  cd $name.$version
-  docker build --tag $docker_user/$name:$version .
-  docker push $docker_user/$name:$version
+  cd $folder
+  docker build --tag $docker_user/$tag .
+  docker push $docker_user/$tag
   cd ..
 }
 
+docker_deploy club-base
 docker_deploy club-nodejs 15
+docker_deploy club-go 1.15
 docker_deploy club-web basic

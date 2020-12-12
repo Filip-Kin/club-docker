@@ -1,6 +1,7 @@
-FROM alpine:latest
+FROM golang:1.15.6-alpine3.12
 
-RUN adduser adduser -u 997 -D -h /home/container container
+RUN apk add --no-cache --update git bash openssh-client \
+    && adduser -u 997 -D -h /home/container container
 
 USER container
 ENV  USER=container HOME=/home/container
