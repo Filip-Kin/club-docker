@@ -1,11 +1,11 @@
 #!/bin/bash
 cd /home/container
 
-if [ ! -e "html" ]; then
-  mkdir html
+if [ ! -e "app" ]; then
+  mkdir app
 fi
 
-cd html
+cd app
 
 export CLUB_HOST=172.18.0.1
 
