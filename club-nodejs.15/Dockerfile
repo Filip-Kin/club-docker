@@ -1,6 +1,6 @@
 FROM mhart/alpine-node:15
 
-RUN apk add --no-cache --update git bash python2 gcc g++ make openssh-client \
+RUN apk add --no-cache --update git bash python2 gcc g++ make openssh-client ffmpeg \
     && adduser -u 997 -D -h /home/container container
 
 USER container
