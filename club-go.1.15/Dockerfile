@@ -1,3 +1,4 @@
+FROM petronetto/opencv-alpine
 FROM golang:1.15.6-alpine3.12
 
 RUN apk add --no-cache --update git bash openssh-client ffmpeg \
