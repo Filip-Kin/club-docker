@@ -1,8 +1,7 @@
 FROM mhart/alpine-node:15
 
 RUN apk add --no-cache --update git bash python2 gcc g++ make openssh-client ffmpeg curl \
-    && adduser -u 997 -D -h /home/container container \
-    && curl -fsSL https://deno.land/x/install/install.sh | sh
+    && adduser -u 997 -D -h /home/container container
 
 USER container
 ENV  USER=container HOME=/home/container
