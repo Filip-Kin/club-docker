@@ -39,8 +39,13 @@ if [ -n "${GIT_REPO}" ]; then
   fi
 fi
 
-echo $ npm install -D
-npm install -D
+if [ -e "yarn.lock" ]; then
+  echo $ yarn
+  yarn
+elif [ -e "package.json" ]; then
+  echo $ npm install -D
+  npm install -D
+fi
 
 if [ -n "${GIT_REPO}" ] && [ -n "${BUILD_SCRIPT}" ]; then
   if [ ! -e "/home/container/.build.config" ]; then
