@@ -1,3 +1,3 @@
 FROM alpine:latest
 
-RUN apk add --no-cache --update git bash openssh-keygen
+RUN apk add --no-cache --update git openssh-keygen

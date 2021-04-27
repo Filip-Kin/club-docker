@@ -1,12 +1,12 @@
-#!/bin/bash
+#!/bin/sh
 cd /home/container
 
 # Output Current Node Version
-echo "Starting server at $(date +"%Y-%m-%d %I:%M:%S") UTC" |& tee /home/container/server.log
-echo "Node.JS Version: $(node --version)" |& tee -a /home/container/server.log
-echo "NPM Version: $(npm --version)" |& tee -a /home/container/server.log
+echo "Starting server at $(date +"%Y-%m-%d %I:%M:%S") UTC"
+echo "Node.JS Version: $(node --version)"
+echo "NPM Version: $(npm --version)"
 
-echo "" |& tee -a /home/container/server.log
+echo ""
 
 if [ ! -e "app" ]; then
   mkdir app
@@ -27,25 +27,25 @@ export MYSQL_HOST=${CLUB_HOST}
 export REDIS_HOST=${CLUB_HOST}
 
 if [ -n "${GIT_REPO}" ]; then
-  echo "Git Repository: ${GIT_REPO}" |& tee -a /home/container/server.log
+  echo "Git Repository: ${GIT_REPO}"
   if [ -e ".git" ]; then
-    git remote set-url "$(git remote)" "${GIT_REPO}" |& tee -a /home/container/server.log
-    git reset --hard |& tee -a /home/container/server.log
-    git checkout "${GIT_BRANCH}" |& tee -a /home/container/server.log
-    git pull origin "${GIT_BRANCH}" --recurse-submodules | grep -q -v 'Already up-to-date.' && GIT_CHANGED=1 |& tee -a /home/container/server.log
+    git remote set-url "$(git remote)" "${GIT_REPO}"
+    git reset --hard
+    git checkout "${GIT_BRANCH}"
+    git pull origin "${GIT_BRANCH}" --recurse-submodules | grep -q -v 'Already up-to-date.' && GIT_CHANGED=1
   else
-    git init . |& tee -a /home/container/server.log
-    git remote add origin "${GIT_REPO}" |& tee -a /home/container/server.log
-    git pull origin "${GIT_BRANCH}" --recurse-submodules -q |& tee -a /home/container/server.log
+    git init .
+    git remote add origin "${GIT_REPO}"
+    git pull origin "${GIT_BRANCH}" --recurse-submodules -q
   fi
 fi
 
 if [ -e "yarn.lock" ]; then
-  echo $ yarn |& tee -a /home/container/server.log
-  yarn |& tee -a /home/container/server.log
+  echo $ yarn
+  yarn
 elif [ -e "package.json" ]; then
-  echo $ npm install -D |& tee -a /home/container/server.log
-  npm install -D |& tee -a /home/container/server.log
+  echo $ npm install -D
+  npm install -D
 fi
 
 if [ -n "${GIT_REPO}" ] && [ -n "${BUILD_SCRIPT}" ]; then
@@ -59,21 +59,21 @@ if [ -n "${GIT_REPO}" ] && [ -n "${BUILD_SCRIPT}" ]; then
   echo "${GIT_REPO};${GIT_BRANCH};${BUILD_SCRIPT}" > /home/container/.build.config
   if [ "$GIT_CHANGED" = "1" ]; then
     BUILD_SCRIPT_MODIFIED=`eval echo $(echo ${BUILD_SCRIPT} | sed -e 's/{{/${/g' -e 's/}}/}/g')`
-    echo $ "${BUILD_SCRIPT_MODIFIED}" |& tee -a /home/container/server.log
-    ${BUILD_SCRIPT_MODIFIED} |& tee -a /home/container/server.log
+    echo $ "${BUILD_SCRIPT_MODIFIED}"
+    ${BUILD_SCRIPT_MODIFIED}
   fi
 fi
 
 START_SCRIPT_MODIFIED=`eval echo $(echo ${START_SCRIPT} | sed -e 's/{{/${/g' -e 's/}}/}/g')`
 
 if [ -n "${DOMAIN}" ]; then
-  echo Notifying Club Sever of the domain configuration. |& tee -a /home/container/server.log
-  wget "http://${CLUB_HOST}:1000/proxy?domain=${DOMAIN}&hostname=${HOSTNAME}" -O - |& tee -a /home/container/server.log
+  echo Notifying Club Sever of the domain configuration.
+  wget "http://${CLUB_HOST}:1000/proxy?domain=${DOMAIN}&hostname=${HOSTNAME}" -O -
 fi
 
-echo "Starting Server" |& tee -a /home/container/server.log
+echo "Starting Server"
 
 export NODE_ENV=production
 
-echo $ "${START_SCRIPT_MODIFIED}" |& tee -a /home/container/server.log
-${START_SCRIPT_MODIFIED} |& tee -a /home/container/server.log
+echo $ "${START_SCRIPT_MODIFIED}"
+${START_SCRIPT_MODIFIED}
