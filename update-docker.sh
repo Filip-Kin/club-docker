@@ -18,9 +18,11 @@ docker_deploy() {
 
 docker_deploy club-base
 docker_deploy club-nodejs 12
+docker_deploy club-nodejs 14
 docker_deploy club-nodejs 15
 docker_deploy club-nodejs 16
 docker_deploy club-nodejs 18
 docker_deploy club-nodejs 19
 docker_deploy club-go 1.15
+docker_deploy club-go 1.16
 docker_deploy club-web basic
