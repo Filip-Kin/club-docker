@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:12
+FROM node:12-alpine
 
 RUN apk add --no-cache --update git bash python2 gcc g++ make openssh-client ffmpeg curl \
     && adduser -u 997 -D -h /home/container container
