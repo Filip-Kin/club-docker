@@ -1,7 +1,8 @@
-#!/bin/bash
+#!/bin/sh
 cd /home/container
 
 # Output Current Node Version
+echo "Starting server at $(date +"%Y-%m-%d %I:%M:%S") UTC"
 echo "Node.JS Version: $(node --version)"
 echo "NPM Version: $(npm --version)"
 

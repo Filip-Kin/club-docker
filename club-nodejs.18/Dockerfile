@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:18-alpine
 
 RUN apk add --no-cache --update git bash python3 gcc g++ make openssh-client ffmpeg curl \
     && adduser -u 997 -D -h /home/container container

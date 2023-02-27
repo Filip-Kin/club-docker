@@ -1,6 +1,7 @@
-FROM node:19-alpine
+FROM petronetto/opencv-alpine
+FROM golang:1.16-alpine3.12
 
-RUN apk add --no-cache --update git bash python3 gcc g++ make openssh-client ffmpeg curl \
+RUN apk add --no-cache --update git openssh-client ffmpeg curl \
     && adduser -u 997 -D -h /home/container container
 
 USER container

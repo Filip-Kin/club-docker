@@ -1,5 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 cd /home/container
+
+echo "Starting server at $(date +"%Y-%m-%d %I:%M:%S") UTC"
 
 if [ ! -e "app" ]; then
   mkdir app
